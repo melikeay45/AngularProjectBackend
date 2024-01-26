@@ -27,13 +27,6 @@ namespace AngularProject.API.Controllers
             return _categoryApiService.GetCategoryById(id);
         }
 
-        //[Route("api/CategoryApi/GetByCategoryName")]
-        //[HttpGet]
-        //public string GetbyCategoryName(string categoryName)
-        //{
-        //    return _categoryApiService.GetCategoryByCategoryName(categoryName);
-        //}
-
         //[Authorize]
         [Route("api/CategoryApi/Add")]
         [HttpPost]
@@ -48,7 +41,6 @@ namespace AngularProject.API.Controllers
         [HttpDelete]
         public Result Delete(int id)
         {
-
             return _categoryApiService.DeleteCategory(id);
         }
 

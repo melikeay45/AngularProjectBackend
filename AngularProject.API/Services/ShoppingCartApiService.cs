@@ -18,6 +18,14 @@ namespace AngularProject.API.Services
 
         // unitofwork nesnemi oluşturuyorum ve db context dosyamı parametre veriyorum.
         private EFUnitOfWork efUnitOfWork = new EFUnitOfWork(shoppingProjectEntities);
+
+        //Verilen id değerine sahip kategoriyi veritabanında bulur ve döndürür.
+        public string GetShoppingCartById(int id)
+        {
+            var shoppingCarts = efUnitOfWork.ShoppingCartTemplate.GetById(id).MapTo<ShoppingCartDto>();
+            return JsonConvert.SerializeObject(shoppingCarts);
+        }
+
         public Result DeleteShoppingCart(int id)
         {
             var result = Result.Instance.Warning("HATA! Sepetinizde böyle bir ürün yok.");
@@ -33,34 +41,90 @@ namespace AngularProject.API.Services
 
             return result;
         }
-        //Yeni ürün ekler
-        public Result AddShoppingCart(ShoppingCartDto shoppingCartDto)
+        ////Yeni ürün ekler
+        //public Result AddShoppingCart(ShoppingCartDto shoppingCartDto)
+        //{
+        //    var result = Result.Instance.Warning("HATA! Girdiğiniz bilgileri kontrol ediniz.");
+
+        //    if (shoppingCartDto != null) //girilen bilgilerin kontrolü yapılır.
+        //    {
+        //        var mappedShoppingCart = shoppingCartDto.MapTo<ShoppingCartTBL>();
+        //        efUnitOfWork.ShoppingCartTemplate.Add(mappedShoppingCart);
+        //        efUnitOfWork.SaveChanges();
+
+        //        result = Result.Instance.Success("Ürün sepetinize başarıyla eklendi.", mappedShoppingCart.cartID);
+
+        //        return result;
+        //    }
+        //    return result;
+        //}
+
+        public Result AddOrUpdateShoppingCart(ShoppingCartDto shoppingCartDto)
         {
             var result = Result.Instance.Warning("HATA! Girdiğiniz bilgileri kontrol ediniz.");
 
-            if (shoppingCartDto != null) //girilen bilgilerin kontrolü yapılır.
+            if (shoppingCartDto != null)
             {
-                var mappedShoppingCart = shoppingCartDto.MapTo<ShoppingCartTBL>();
-                efUnitOfWork.ShoppingCartTemplate.Add(mappedShoppingCart);
-                efUnitOfWork.SaveChanges();
+                // Kullanıcıya ait belirli bir ürünün sepete eklenip eklenmediğini kontrol et
+                var existingCart = efUnitOfWork.ShoppingCartTemplate.GetAll()
+                                    .Where(x => x.userID == shoppingCartDto.userID && x.productID == shoppingCartDto.productID)
+                                    .FirstOrDefault();
 
-                result = Result.Instance.Success("Ürün sepetinize başarıyla eklendi.", mappedShoppingCart.cartID);
+                if (existingCart != null)
+                {
+                    // Eğer varsa, miktarını artır
+                    existingCart.quantity++;
+                    efUnitOfWork.SaveChanges();
 
-                return result;
+                    result = Result.Instance.Success("Ürün sepetinize başarıyla eklendi.", existingCart.cartID);
+                }
+                else
+                {
+                    // Yoksa, yeni bir kayıt oluştur
+                    var mappedShoppingCart = shoppingCartDto.MapTo<ShoppingCartTBL>();
+                    mappedShoppingCart.quantity = 1; // Yeni ürünün miktarını 1 olarak ayarlayın
+                    efUnitOfWork.ShoppingCartTemplate.Add(mappedShoppingCart);
+                    efUnitOfWork.SaveChanges();
+
+                    result = Result.Instance.Success("Ürün sepetinize başarıyla eklendi.", mappedShoppingCart.cartID);
+                }
             }
             return result;
         }
+
+
 
         //Verilen userID  değerine sahip sepetteki verileri veritabanında bulur ve döndürür.
         public string GetShoppingCartByUserID(int userID)
         {
             var shoppingCart = efUnitOfWork.ShoppingCartTemplate.GetAll()
            .Where(r => r.userID==userID)
+           .OrderBy(r=>r.cartID)
            .ToList()
            .Select(r => r.MapTo<ShoppingCartDto>());
 
             return JsonConvert.SerializeObject(shoppingCart);
         }
 
+        //Sadece miktar alanını günceller
+        public Result UpdateShoppingCartQuantity(int id, ShoppingCartDto shoppingCartDto)
+        {
+            var result = Result.Instance.Warning("HATA! Güncelleme istediğiniz ürün bulunamadı.");
+
+            // istenilen id mevcutsa güncellenecek data shoppingcarta atanır.
+            var shoppingCart = efUnitOfWork.ShoppingCartTemplate.GetById(id).MapTo<ShoppingCartDto>();
+            if (shoppingCart != null)
+            {
+
+                var mapped = shoppingCartDto.MapTo<ShoppingCartTBL>();
+                mapped.cartID = shoppingCart.cartID;
+                efUnitOfWork.ShoppingCartTemplate.Update(mapped);
+                efUnitOfWork.SaveChanges();
+
+                result = Result.Instance.Success("Sepet bilgisi başarıyla güncellendi.");
+                return result;
+            }
+            return result;
+        }
     }
 }

@@ -3,6 +3,7 @@ using AngularProject.CORE.Result;
 using AngularProject.DTO.Dtos;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -28,7 +29,7 @@ namespace AngularProject.API.Controllers
             return _productApiService.GetProductByID(id);
         }
 
-        [Route("api/ProductApi/GetByCategoryName")]
+        [Route("api/ProductApi/GetByCategoryID")]
         [HttpGet]
         public string GetbyCategoryID(int categoryID)
         {
@@ -62,7 +63,7 @@ namespace AngularProject.API.Controllers
             return _productApiService.UpdateProduct(id, productDto);
         }
 
-
+        //C:\Users\Melike Aydın\Desktop\Angular-Bitirme-Projesi\Angular-Project\src\Uploads\ProductImages
         //[Authorize]
         [Route("api/ProductApi/UploadPicture")]
         [HttpPost]
@@ -74,8 +75,8 @@ namespace AngularProject.API.Controllers
             // istek içine bak dosya var mı ?
             if (httpRequest.Files.Count > 0)
             {
-                // Serverda dosyaları saklayacağım dizini belirt
-                string path = HttpContext.Current.Server.MapPath("~/Uploads/ProductPictures");
+                // Serverda dosyaları saklayacağım dizini belirt 
+                string path = "C:/Users/Melike Aydın/Desktop/Angular-Bitirme-Projesi/Angular-Project/src/assets/Uploads/ProductImages";
 
                 // eğer dizin yoksa oluştur
                 if (!Directory.Exists(path))
@@ -84,29 +85,37 @@ namespace AngularProject.API.Controllers
                 }
 
                 // istek içinde bulunan dosyaları al
-                foreach (string file in httpRequest.Files)
+                foreach (string fileName in httpRequest.Files)
                 {
                     //dosyayı değişkende tut
-                    var postedFile = httpRequest.Files[file];
+                    var postedFile = httpRequest.Files[fileName];
 
                     //dosyaya random isim hazırla.
-                    string fNAme = Guid.NewGuid().ToString();
+                    string fName = Guid.NewGuid().ToString();
 
                     // dosyanın uzantısını al
                     string fExt = Path.GetExtension(postedFile.FileName);
 
                     // oluşturulan path içinde verdiğin isimle dosyayı yerleştir.Dosya yolunu değişkende tut
-                    var filePath = Path.Combine(path, fNAme + fExt);
+                    var filePath = Path.Combine(path, fName + fExt);
 
                     //dosyayı servera kaydet.
-                    postedFile.SaveAs(filePath);
+                    try
+                    {
+                        postedFile.SaveAs(filePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Dosya kaydetme hatası: {ex.Message}");
+                        return Result.Instance.Warning("HATA! Yüklemek istediğiniz fotoğraf kaydedilemedi.");
+                    }
 
                     //ilgili kullanıcının id ' si ile dosyanın adını servise gönder dbye kaydetmesi için.
-                    return _productApiService.UploadProductPicture(id, fNAme + fExt);
-
+                    return _productApiService.UploadProductPicture(id, fName + fExt);
                 }
             }
             return Result.Instance.Warning("HATA! Yüklemek istediğiniz fotoğraf yüklenemedi.");
         }
+
     }
 }

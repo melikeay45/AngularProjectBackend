@@ -15,7 +15,7 @@ namespace AngularProject.DTO.Dtos
         public int quantity { get; set; }
         public decimal price { get; set; }
 
-        public virtual ProductDto product { get; set; }
-        public virtual UserDto user { get; set; }
+        //public virtual ProductDto product { get; set; }
+        //public virtual UserDto user { get; set; }
     }
 }

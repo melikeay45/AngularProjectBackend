@@ -39,6 +39,20 @@ namespace AngularProject.API.Services
             return JsonConvert.SerializeObject(categories);
         }
 
+        //Verilen id değerine sahip kategoriyi veritabanında bulur ve döndürür.
+        public string GetCategoryNameById(int id)
+        {
+            var category = efUnitOfWork.CategoryTemplate.GetById(id);
+            if (category != null)
+            {
+                string categoryName = category.categoryName;
+                return JsonConvert.SerializeObject(categoryName);
+            }
+            else
+            {
+                return "Kategori bulunamadı"; //veya başka bir hata mesajı döndürebilirsiniz
+            }
+        }
 
         //Verilen id değerine sahip kategori veritabanından siler.
         public Result DeleteCategory(int id)

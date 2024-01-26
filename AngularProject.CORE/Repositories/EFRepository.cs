@@ -43,6 +43,7 @@ namespace AngularProject.CORE.Repositories
 
 
 
+
         //Veritabanındaki verilen id'ye sahip veriyi bulur ve döndürür.
         public T GetById(int id)
         {

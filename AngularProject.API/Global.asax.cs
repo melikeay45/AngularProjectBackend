@@ -1,9 +1,6 @@
 ﻿using AngularProject.DTO.MappingProfiles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -20,6 +17,7 @@ namespace AngularProject.API
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
+
             //Tabloları profilleriyle eşleştirir. Profiles klasöründe tanıttığım her profili burda belirtiyorum
             AutoMapper.Mapper.Initialize(cfg =>
             {
@@ -34,6 +32,9 @@ namespace AngularProject.API
                 cfg.AddProfile<LogProfile>();
 
             });
+
+
         }
+     
     }
 }
