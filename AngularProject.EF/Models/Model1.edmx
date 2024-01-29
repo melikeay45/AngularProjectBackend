@@ -26,27 +26,21 @@
           <Property Name="logUsername" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="isDelete" Type="bit" Nullable="false" />
         </EntityType>
-        <EntityType Name="OrderDetailTBL">
-          <Key>
-            <PropertyRef Name="detailID" />
-          </Key>
-          <Property Name="detailID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="orderID" Type="int" Nullable="false" />
-          <Property Name="productID" Type="int" Nullable="false" />
-          <Property Name="quantity" Type="int" Nullable="false" />
-          <Property Name="unitPrice" Type="decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="isDelete" Type="bit" />
-        </EntityType>
         <EntityType Name="OrderTBL">
           <Key>
             <PropertyRef Name="orderID" />
           </Key>
           <Property Name="orderID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="userID" Type="int" Nullable="false" />
-          <Property Name="totalAmount" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="totalAmount" Type="float" Nullable="false" />
           <Property Name="orderDate" Type="datetime" Nullable="false" />
           <Property Name="orderStatus" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="isDelete" Type="bit" Nullable="false" />
+          <Property Name="address" Type="varchar(max)" Nullable="false" />
+          <Property Name="phoneNumber" Type="int" Nullable="false" />
+          <Property Name="productID" Type="int" Nullable="false" />
+          <Property Name="quantity" Type="int" />
+          <Property Name="unitPrice" Type="float" />
         </EntityType>
         <EntityType Name="ProductTBL">
           <Key>
@@ -91,13 +85,12 @@
           <Property Name="username" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="password" Type="varchar" MaxLength="11" Nullable="false" />
           <Property Name="email" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="address" Type="varchar" MaxLength="255" />
           <Property Name="phoneNumber" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="registrationDate" Type="datetime" Nullable="false" />
           <Property Name="userType" Type="bit" Nullable="false" />
           <Property Name="birthdate" Type="datetime" Nullable="false" />
-          <Property Name="identityNumber" Type="varchar" MaxLength="11" Nullable="false" />
           <Property Name="isDelete" Type="bit" Nullable="false" />
+          <Property Name="address" Type="nvarchar(max)" />
         </EntityType>
         <Association Name="FK__LogTBL__LogUsern__2D27B809">
           <End Role="UserTBL" Type="Self.UserTBL" Multiplicity="1" />
@@ -108,30 +101,6 @@
             </Principal>
             <Dependent Role="LogTBL">
               <PropertyRef Name="userID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__OrderDeta__Order__4D94879B">
-          <End Role="OrderTBL" Type="Self.OrderTBL" Multiplicity="1" />
-          <End Role="OrderDetailTBL" Type="Self.OrderDetailTBL" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OrderTBL">
-              <PropertyRef Name="orderID" />
-            </Principal>
-            <Dependent Role="OrderDetailTBL">
-              <PropertyRef Name="orderID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__OrderDeta__Produ__4E88ABD4">
-          <End Role="ProductTBL" Type="Self.ProductTBL" Multiplicity="1" />
-          <End Role="OrderDetailTBL" Type="Self.OrderDetailTBL" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ProductTBL">
-              <PropertyRef Name="productID" />
-            </Principal>
-            <Dependent Role="OrderDetailTBL">
-              <PropertyRef Name="productID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -217,7 +186,6 @@
         <EntityContainer Name="ShoppingProjectModelStoreContainer">
           <EntitySet Name="CategoryTBL" EntityType="Self.CategoryTBL" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LogTBL" EntityType="Self.LogTBL" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="OrderDetailTBL" EntityType="Self.OrderDetailTBL" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderTBL" EntityType="Self.OrderTBL" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductTBL" EntityType="Self.ProductTBL" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ShoppingCartTBL" EntityType="Self.ShoppingCartTBL" Schema="dbo" store:Type="Tables" />
@@ -226,14 +194,6 @@
           <AssociationSet Name="FK__LogTBL__LogUsern__2D27B809" Association="Self.FK__LogTBL__LogUsern__2D27B809">
             <End Role="UserTBL" EntitySet="UserTBL" />
             <End Role="LogTBL" EntitySet="LogTBL" />
-          </AssociationSet>
-          <AssociationSet Name="FK__OrderDeta__Order__4D94879B" Association="Self.FK__OrderDeta__Order__4D94879B">
-            <End Role="OrderTBL" EntitySet="OrderTBL" />
-            <End Role="OrderDetailTBL" EntitySet="OrderDetailTBL" />
-          </AssociationSet>
-          <AssociationSet Name="FK__OrderDeta__Produ__4E88ABD4" Association="Self.FK__OrderDeta__Produ__4E88ABD4">
-            <End Role="ProductTBL" EntitySet="ProductTBL" />
-            <End Role="OrderDetailTBL" EntitySet="OrderDetailTBL" />
           </AssociationSet>
           <AssociationSet Name="FK__OrderTBL__UserID__300424B4" Association="Self.FK__OrderTBL__UserID__300424B4">
             <End Role="UserTBL" EntitySet="UserTBL" />
@@ -280,30 +240,21 @@
           <Property Name="isDelete" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="UserTBL" Relationship="Self.FK__LogTBL__LogUsern__2D27B809" FromRole="LogTBL" ToRole="UserTBL" />
         </EntityType>
-        <EntityType Name="OrderDetailTBL">
-          <Key>
-            <PropertyRef Name="detailID" />
-          </Key>
-          <Property Name="detailID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="orderID" Type="Int32" Nullable="false" />
-          <Property Name="productID" Type="Int32" Nullable="false" />
-          <Property Name="quantity" Type="Int32" Nullable="false" />
-          <Property Name="unitPrice" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="isDelete" Type="Boolean" />
-          <NavigationProperty Name="OrderTBL" Relationship="Self.FK__OrderDeta__Order__4D94879B" FromRole="OrderDetailTBL" ToRole="OrderTBL" />
-          <NavigationProperty Name="ProductTBL" Relationship="Self.FK__OrderDeta__Produ__4E88ABD4" FromRole="OrderDetailTBL" ToRole="ProductTBL" />
-        </EntityType>
         <EntityType Name="OrderTBL">
           <Key>
             <PropertyRef Name="orderID" />
           </Key>
           <Property Name="orderID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="userID" Type="Int32" Nullable="false" />
-          <Property Name="totalAmount" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="totalAmount" Type="Double" Nullable="false" />
           <Property Name="orderDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="orderStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="isDelete" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="OrderDetailTBL" Relationship="Self.FK__OrderDeta__Order__4D94879B" FromRole="OrderTBL" ToRole="OrderDetailTBL" />
+          <Property Name="address" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="phoneNumber" Type="Int32" Nullable="false" />
+          <Property Name="productID" Type="Int32" Nullable="false" />
+          <Property Name="quantity" Type="Int32" />
+          <Property Name="unitPrice" Type="Double" />
           <NavigationProperty Name="UserTBL" Relationship="Self.FK__OrderTBL__UserID__300424B4" FromRole="OrderTBL" ToRole="UserTBL" />
         </EntityType>
         <EntityType Name="ProductTBL">
@@ -319,7 +270,6 @@
           <Property Name="imageURL" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="isDelete" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="CategoryTBL" Relationship="Self.FK__ProductTB__Categ__2A4B4B5E" FromRole="ProductTBL" ToRole="CategoryTBL" />
-          <NavigationProperty Name="OrderDetailTBL" Relationship="Self.FK__OrderDeta__Produ__4E88ABD4" FromRole="ProductTBL" ToRole="OrderDetailTBL" />
           <NavigationProperty Name="ShoppingCartTBL" Relationship="Self.FK__ShoppingC__Produ__33D4B598" FromRole="ProductTBL" ToRole="ShoppingCartTBL" />
         </EntityType>
         <EntityType Name="ShoppingCartTBL">
@@ -354,13 +304,12 @@
           <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="password" Type="String" MaxLength="11" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="address" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="phoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="registrationDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="userType" Type="Boolean" Nullable="false" />
           <Property Name="birthdate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="identityNumber" Type="String" MaxLength="11" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="isDelete" Type="Boolean" Nullable="false" />
+          <Property Name="address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="LogTBL" Relationship="Self.FK__LogTBL__LogUsern__2D27B809" FromRole="UserTBL" ToRole="LogTBL" />
           <NavigationProperty Name="OrderTBL" Relationship="Self.FK__OrderTBL__UserID__300424B4" FromRole="UserTBL" ToRole="OrderTBL" />
           <NavigationProperty Name="ShoppingCartTBL" Relationship="Self.FK__ShoppingC__UserI__32E0915F" FromRole="UserTBL" ToRole="ShoppingCartTBL" />
@@ -386,30 +335,6 @@
             </Principal>
             <Dependent Role="LogTBL">
               <PropertyRef Name="userID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__OrderDeta__Order__4D94879B">
-          <End Role="OrderTBL" Type="Self.OrderTBL" Multiplicity="1" />
-          <End Role="OrderDetailTBL" Type="Self.OrderDetailTBL" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OrderTBL">
-              <PropertyRef Name="orderID" />
-            </Principal>
-            <Dependent Role="OrderDetailTBL">
-              <PropertyRef Name="orderID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__OrderDeta__Produ__4E88ABD4">
-          <End Role="ProductTBL" Type="Self.ProductTBL" Multiplicity="1" />
-          <End Role="OrderDetailTBL" Type="Self.OrderDetailTBL" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ProductTBL">
-              <PropertyRef Name="productID" />
-            </Principal>
-            <Dependent Role="OrderDetailTBL">
-              <PropertyRef Name="productID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -452,7 +377,6 @@
         <EntityContainer Name="ShoppingProjectEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="CategoryTBL" EntityType="Self.CategoryTBL" />
           <EntitySet Name="LogTBL" EntityType="Self.LogTBL" />
-          <EntitySet Name="OrderDetailTBL" EntityType="Self.OrderDetailTBL" />
           <EntitySet Name="OrderTBL" EntityType="Self.OrderTBL" />
           <EntitySet Name="ProductTBL" EntityType="Self.ProductTBL" />
           <EntitySet Name="ShoppingCartTBL" EntityType="Self.ShoppingCartTBL" />
@@ -465,14 +389,6 @@
           <AssociationSet Name="FK__LogTBL__LogUsern__2D27B809" Association="Self.FK__LogTBL__LogUsern__2D27B809">
             <End Role="UserTBL" EntitySet="UserTBL" />
             <End Role="LogTBL" EntitySet="LogTBL" />
-          </AssociationSet>
-          <AssociationSet Name="FK__OrderDeta__Order__4D94879B" Association="Self.FK__OrderDeta__Order__4D94879B">
-            <End Role="OrderTBL" EntitySet="OrderTBL" />
-            <End Role="OrderDetailTBL" EntitySet="OrderDetailTBL" />
-          </AssociationSet>
-          <AssociationSet Name="FK__OrderDeta__Produ__4E88ABD4" Association="Self.FK__OrderDeta__Produ__4E88ABD4">
-            <End Role="ProductTBL" EntitySet="ProductTBL" />
-            <End Role="OrderDetailTBL" EntitySet="OrderDetailTBL" />
           </AssociationSet>
           <AssociationSet Name="FK__OrderTBL__UserID__300424B4" Association="Self.FK__OrderTBL__UserID__300424B4">
             <End Role="UserTBL" EntitySet="UserTBL" />
@@ -557,18 +473,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="OrderDetailTBL">
-            <EntityTypeMapping TypeName="ShoppingProjectModel.OrderDetailTBL">
-              <MappingFragment StoreEntitySet="OrderDetailTBL">
-                <ScalarProperty Name="detailID" ColumnName="detailID" />
-                <ScalarProperty Name="orderID" ColumnName="orderID" />
-                <ScalarProperty Name="productID" ColumnName="productID" />
-                <ScalarProperty Name="quantity" ColumnName="quantity" />
-                <ScalarProperty Name="unitPrice" ColumnName="unitPrice" />
-                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="OrderTBL">
             <EntityTypeMapping TypeName="ShoppingProjectModel.OrderTBL">
               <MappingFragment StoreEntitySet="OrderTBL">
@@ -578,6 +482,11 @@
                 <ScalarProperty Name="orderDate" ColumnName="orderDate" />
                 <ScalarProperty Name="orderStatus" ColumnName="orderStatus" />
                 <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="phoneNumber" ColumnName="phoneNumber" />
+                <ScalarProperty Name="productID" ColumnName="productID" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+                <ScalarProperty Name="unitPrice" ColumnName="unitPrice" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -626,13 +535,12 @@
                 <ScalarProperty Name="username" ColumnName="username" />
                 <ScalarProperty Name="password" ColumnName="password" />
                 <ScalarProperty Name="email" ColumnName="email" />
-                <ScalarProperty Name="address" ColumnName="address" />
                 <ScalarProperty Name="phoneNumber" ColumnName="phoneNumber" />
                 <ScalarProperty Name="registrationDate" ColumnName="registrationDate" />
                 <ScalarProperty Name="userType" ColumnName="userType" />
                 <ScalarProperty Name="birthdate" ColumnName="birthdate" />
-                <ScalarProperty Name="identityNumber" ColumnName="identityNumber" />
                 <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="address" ColumnName="address" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

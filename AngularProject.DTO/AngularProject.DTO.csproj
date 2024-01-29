@@ -46,7 +46,6 @@
   <ItemGroup>
     <Compile Include="Dtos\CategoryDto.cs" />
     <Compile Include="Dtos\LogDto.cs" />
-    <Compile Include="Dtos\OrderDetailDto.cs" />
     <Compile Include="Dtos\OrderDto.cs" />
     <Compile Include="Dtos\ProductDto.cs" />
     <Compile Include="Dtos\ShoppingCartDto.cs" />
@@ -54,7 +53,6 @@
     <Compile Include="Dtos\UserDto.cs" />
     <Compile Include="MappingProfiles\CategoryProfile.cs" />
     <Compile Include="MappingProfiles\LogProfile.cs" />
-    <Compile Include="MappingProfiles\OrderDetailProfile.cs" />
     <Compile Include="MappingProfiles\OrderProfile.cs" />
     <Compile Include="MappingProfiles\ProductProfile.cs" />
     <Compile Include="MappingProfiles\ShoppingCartProfile.cs" />

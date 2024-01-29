@@ -33,22 +33,24 @@ namespace AngularProject.API.Controllers
 
                 TokenApiService tokenApiService = new TokenApiService();
 
-                var _control = tokenApiService.CheckLogin(model.username, model.password);
+                var userDto = tokenApiService.CheckLogin(model.username, model.password);
 
-                if (_control == null)
-                    return Ok(new { success = false, data = "", message = "Kullanıcı adı veya şifre hatalı." });
+                string userType = userDto.userType ? "user" : "admin" ;
+
+                if (userDto == null)
+                    return Ok(new { success = false, data = new returnLogin(), message = "Kullanıcı adı veya şifre hatalı." });
 
                 var jwtKey = ConfigurationManager.AppSettings["JWT:Key"];
                 var jwtIssuer = ConfigurationManager.AppSettings["JWT:Issuer"];
                 var jwtAudience = ConfigurationManager.AppSettings["JWT:Audience"];
                 var jwtManager = new JwtManager(jwtKey, jwtIssuer, jwtAudience);
 
-                var token = jwtManager.GenerateToken(_control.username, _control.userID);
-                return Ok(new { success = true, data = token, message = "Başarılı." });
+                var token = jwtManager.GenerateToken(userDto.userID, userDto.userType);
+                return Ok(new { success = true, data = new returnLogin { token = token, userType = userType }, message = "Başarılı." });
             }
             catch (Exception)
             {
-                return Ok(new { success = false, data = "", message = "Giriş işlemi sırasında bilinmeyen bir hata ile karşılaşıldı." });
+                return Ok(new { success = false, data = new returnLogin(), message = "Giriş işlemi sırasında bilinmeyen bir hata ile karşılaşıldı." });
             }
         }
 
@@ -58,6 +60,12 @@ namespace AngularProject.API.Controllers
             public string username { get; set; }
             [Required]
             public string password{ get; set; }
+        }
+
+        public class returnLogin
+        {
+            public string token { get; set; }
+            public string userType { get; set; }
         }
 
     }

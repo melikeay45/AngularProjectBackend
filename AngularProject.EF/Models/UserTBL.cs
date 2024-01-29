@@ -28,13 +28,12 @@ namespace AngularProject.EF.Models
         public string username { get; set; }
         public string password { get; set; }
         public string email { get; set; }
-        public string address { get; set; }
         public string phoneNumber { get; set; }
         public System.DateTime registrationDate { get; set; }
         public bool userType { get; set; }
         public System.DateTime birthdate { get; set; }
-        public string identityNumber { get; set; }
         public bool isDelete { get; set; }
+        public string address { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<LogTBL> LogTBL { get; set; }

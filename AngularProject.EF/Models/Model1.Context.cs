@@ -29,7 +29,6 @@ namespace AngularProject.EF.Models
     
         public virtual DbSet<CategoryTBL> CategoryTBL { get; set; }
         public virtual DbSet<LogTBL> LogTBL { get; set; }
-        public virtual DbSet<OrderDetailTBL> OrderDetailTBL { get; set; }
         public virtual DbSet<OrderTBL> OrderTBL { get; set; }
         public virtual DbSet<ProductTBL> ProductTBL { get; set; }
         public virtual DbSet<ShoppingCartTBL> ShoppingCartTBL { get; set; }

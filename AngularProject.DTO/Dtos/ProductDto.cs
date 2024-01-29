@@ -18,7 +18,6 @@ namespace AngularProject.DTO.Dtos
         public bool isDelete { get; set; }
 
         public virtual CategoryDto category { get; set; }
-        public virtual List<OrderDetailDto> orderDetails { get; set; }
         public virtual List<ShoppingCartDto> shoppingCarts { get; set; }
     }
 }

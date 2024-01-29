@@ -11,24 +11,23 @@ using System.Web.Http;
 
 namespace AngularProject.API.Controllers
 {
-    [Authorize]
     public class OrderApiController:ApiController
     {
 
-        private OrderApiService orderApiService = new OrderApiService();
+        private OrderApiService _orderApiService = new OrderApiService();
 
         [Route("api/OrderApi/GetAll")]
         [HttpGet]
         public string GetAll()
         {
-            return orderApiService.GetAllOrder();
+            return _orderApiService.GetAllOrder();
         }
 
         [Route("api/OrderApi/GetOrdersByUserID")]
         [HttpGet]
-        public string GetOrdersByUserID(int id)
+        public string GetOrdersByUserID()
         {
-            return orderApiService.GetOrdersByUserID(id);
+            return _orderApiService.GetOrdersByUserID(Convert.ToInt32(User.Identity.Name));
         }
 
 
@@ -36,7 +35,7 @@ namespace AngularProject.API.Controllers
         [HttpGet]
         public string Get(int id)
         {
-            return orderApiService.GetOrderByID(id);
+            return _orderApiService.GetOrderByID(id);
         }
 
 
@@ -48,13 +47,14 @@ namespace AngularProject.API.Controllers
         //}
 
 
-        [Authorize]
+        //[Authorize]
         [Route("api/OrderApi/Add")]
         [HttpPost]
-        public Result Post(OrderDto orderDto)
+        public Result Post(OrderDto[] orderDto)
         {
 
-            return orderApiService.AddOrder(orderDto);
+                
+                return _orderApiService.AddOrder(orderDto,Convert.ToInt32(User.Identity.Name));
         }
 
         [Authorize]
@@ -63,7 +63,7 @@ namespace AngularProject.API.Controllers
         public Result Delete(int id)
         {
 
-            return orderApiService.DeleteOrder(id);
+            return _orderApiService.DeleteOrder(id);
         }
 
         [Authorize]
@@ -72,7 +72,7 @@ namespace AngularProject.API.Controllers
         public Result Update(int id, OrderDto orderDto)
         {
 
-            return orderApiService.UpdateOrder(id, orderDto);
+            return _orderApiService.UpdateOrder(id, orderDto);
         }
 
 
@@ -93,96 +93,5 @@ namespace AngularProject.API.Controllers
             }
         }
 
-        //[Authorize]
-        //[Route("api/OrderApi/UploadRecipeVideo")]
-        //[HttpPost]
-        //public Result UploadRecipeVideo(int id)
-        //{
-        //    // isteği al.
-        //    var httpRequest = HttpContext.Current.Request;
-
-        //    // istek içine bak dosya var mı ?
-        //    if (httpRequest.Files.Count > 0)
-        //    {
-        //        // Serverda dosyaları saklayacağım dizini belirt
-        //        string path = HttpContext.Current.Server.MapPath("~/Uploads/RecipeVideos");
-
-        //        // eğer dizin yoksa oluştur
-        //        if (!Directory.Exists(path))
-        //        {
-        //            Directory.CreateDirectory(path);
-        //        }
-
-        //        // istek içinde bulunan dosyaları al
-        //        foreach (string file in httpRequest.Files)
-        //        {
-        //            //dosyayı değişkende tut
-        //            var postedFile = httpRequest.Files[file];
-        //            string decodedString = DecodeEncodedFileName(postedFile.FileName);
-
-        //            //dosyaya random isim hazırla.
-        //            string fNAme = Guid.NewGuid().ToString();
-
-        //            // dosyanın uzantısını al
-        //            string fExt = Path.GetExtension(decodedString);
-
-        //            // oluşturulan path içinde verdiğin isimle dosyayı yerleştir.Dosya yolunu değişkende tut
-        //            var filePath = Path.Combine(path, fNAme + fExt);
-
-        //            //dosyayı servera kaydet.
-        //            postedFile.SaveAs(filePath);
-
-        //            //ilgili kullanıcının id ' si ile dosyanın adını servise gönder dbye kaydetmesi için.
-        //            return recipeApiService.UploadRecipeVideo(id, fNAme + fExt);
-        //        }
-        //    }
-        //    return Result.Instance.Warning("HATA! Yüklemek istediğiniz video yüklenemedi.");
-        //}
-
-        //[Authorize]
-        //[Route("api/OrderApi/UploadRecipePicture")]
-        //[HttpPost]
-        //public Result UploadRecipePicture(int id)
-        //{
-        //    // isteği al.
-        //    var httpRequest = HttpContext.Current.Request;
-
-        //    // istek içine bak dosya var mı ?
-        //    if (httpRequest.Files.Count > 0)
-        //    {
-        //        // Serverda dosyaları saklayacağım dizini belirt
-        //        string path = HttpContext.Current.Server.MapPath("~/Uploads/RecipePictures");
-
-        //        // eğer dizin yoksa oluştur
-        //        if (!Directory.Exists(path))
-        //        {
-        //            Directory.CreateDirectory(path);
-        //        }
-
-        //        // istek içinde bulunan dosyaları al
-        //        foreach (string file in httpRequest.Files)
-        //        {
-        //            //dosyayı değişkende tut
-        //            var postedFile = httpRequest.Files[file];
-
-        //            //dosyaya random isim hazırla.
-        //            string fNAme = Guid.NewGuid().ToString();
-
-        //            // dosyanın uzantısını al
-        //            string fExt = Path.GetExtension(postedFile.FileName);
-
-        //            // oluşturulan path içinde verdiğin isimle dosyayı yerleştir.Dosya yolunu değişkende tut
-        //            var filePath = Path.Combine(path, fNAme + fExt);
-
-        //            //dosyayı servera kaydet.
-        //            postedFile.SaveAs(filePath);
-
-        //            //ilgili kullanıcının id ' si ile dosyanın adını servise gönder dbye kaydetmesi için.
-        //            return recipeApiService.UploadRecipePicture(id, fNAme + fExt);
-
-        //        }
-        //    }
-        //    return Result.Instance.Warning("HATA! Yüklemek istediğiniz fotoğraf yüklenemedi.");
-        //}
     }
 }

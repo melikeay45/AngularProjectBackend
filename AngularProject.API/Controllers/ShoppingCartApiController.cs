@@ -20,7 +20,7 @@ namespace AngularProject.API.Controllers
         {
             return _shoppingCartApiService.GetShoppingCartByUserID(Convert.ToInt32(User.Identity.Name));
         }
-
+        
         [Route("api/CartApi/Get")]
         [HttpGet]
         public string GetbyId(int id)
@@ -28,16 +28,16 @@ namespace AngularProject.API.Controllers
             return _shoppingCartApiService.GetShoppingCartById(id);
         }
 
-        //[Authorize]
+        [Authorize]
         [Route("api/CartApi/Add")]
         [HttpPost]
         public Result Post(ShoppingCartDto shoppingCartDto)
         {
-
+            shoppingCartDto.userID = Convert.ToInt32(User.Identity.Name);
             return _shoppingCartApiService.AddOrUpdateShoppingCart(shoppingCartDto);
         }
 
-        //[Authorize]
+        [Authorize]
         [Route("api/CartApi/Delete")]
         [HttpDelete]
         public Result Delete(int id)
@@ -45,11 +45,20 @@ namespace AngularProject.API.Controllers
             return _shoppingCartApiService.DeleteShoppingCart(id);
         }
 
-        //[Authorize]
+        [Authorize]
+        [Route("api/CartApi/DeleteAll")]
+        [HttpDelete]
+        public Result DeleteAll()
+        {
+            return _shoppingCartApiService.DeleteAll(Convert.ToInt32(User.Identity.Name));
+        }
+
+        [Authorize]
         [Route("api/CartApi/Update")]
         [HttpPut]
         public Result Update(int id, ShoppingCartDto shoppingCartDto)
         {
+            shoppingCartDto.userID = Convert.ToInt32(User.Identity.Name);
             return _shoppingCartApiService.UpdateShoppingCartQuantity(id, shoppingCartDto);
         }
     }

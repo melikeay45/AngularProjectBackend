@@ -23,7 +23,6 @@ namespace AngularProject.API
             {
                 //mapping tables
 
-                cfg.AddProfile<OrderDetailProfile>();
                 cfg.AddProfile<OrderProfile>();
                 cfg.AddProfile<ProductProfile>();
                 cfg.AddProfile<CategoryProfile>();

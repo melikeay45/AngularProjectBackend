@@ -34,7 +34,6 @@ namespace AngularProject.CORE.UnitOfWork
         //WORKING WITH TABLES
         private EFRepository<CategoryTBL> _categoryRepository;
         private EFRepository<UserTBL> _userRepository;
-        private EFRepository<OrderDetailTBL> _orderDetailRepository;
         private EFRepository<OrderTBL> _orderRepository;
         private EFRepository<ProductTBL> _productRepository;
         private EFRepository<ShoppingCartTBL> _shoppingCartRepository;
@@ -43,7 +42,6 @@ namespace AngularProject.CORE.UnitOfWork
 
         public EFRepository<CategoryTBL> CategoryTemplate => _categoryRepository ?? (_categoryRepository = new EFRepository<CategoryTBL>(_dbContext));
 
-        public EFRepository<OrderDetailTBL> OrderDetailTemplate => _orderDetailRepository ?? (_orderDetailRepository = new EFRepository<OrderDetailTBL>(_dbContext));
 
         public EFRepository<OrderTBL> OrderTemplate => _orderRepository ?? (_orderRepository = new EFRepository<OrderTBL>(_dbContext));
 

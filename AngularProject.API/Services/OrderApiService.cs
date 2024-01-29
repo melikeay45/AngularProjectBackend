@@ -31,19 +31,17 @@ namespace AngularProject.API.Services
             return JsonConvert.SerializeObject(orders);
         }
 
-        //kullanıcıya göre tarifleri listeler
+        //kullanıcıya göre siparişleri listeler
+       
         public string GetOrdersByUserID(int userID)
         {
+            var order = efUnitOfWork.OrderTemplate.GetAll()
+           .Where(r => r.userID == userID)
+           .OrderBy(r => r.orderID)
+           .ToList()
+           .Select(r => r.MapTo<OrderDto>());
 
-            //projecTo, autommaper aracı. DB varlığımı dto ya mapler.
-            var orders = efUnitOfWork.OrderTemplate.GetAll(i => i.userID == userID && i.isDelete == false)
-                .OrderBy(o => o.orderID) // gelen datayı id ye göre sırala
-                .ProjectTo<OrderDto>()
-                .ToList();
-
-            return JsonConvert.SerializeObject(orders);
-
-
+            return JsonConvert.SerializeObject(order);
         }
 
 
@@ -100,19 +98,23 @@ namespace AngularProject.API.Services
 
 
         //Yeni sipariş ekler
-        public Result AddOrder(OrderDto orderDto)
+        public Result AddOrder(OrderDto[] orderDtos,int userID)
         {
             var result = Result.Instance.Warning("HATA! Girdiğiniz bilgileri kontrol ediniz.");
 
-            if (orderDto != null) //girilen bilgilerin kontrolü yapılır.
+            if (orderDtos.Length != 0) //girilen bilgilerin kontrolü yapılır.
             {
-                var mappedOrder = orderDto.MapTo<OrderTBL>();
+                foreach(var orderDto in orderDtos) {
+                    orderDto.userID = userID;
+                    orderDto.orderDate = DateTime.Now;
+                    var mappedOrder = orderDto.MapTo<OrderTBL>();
                 efUnitOfWork.OrderTemplate.Add(mappedOrder);
                 efUnitOfWork.SaveChanges();
+                }
+                
 
-                result = Result.Instance.Success("Sipariş kaydınız başarıyla alındı.", mappedOrder.orderID);
+                result = Result.Instance.Success("Sipariş kaydınız başarıyla alındı.");
 
-                return result;
             }
             return result;
         }
@@ -138,63 +140,7 @@ namespace AngularProject.API.Services
             return result;
         }
 
-        ////Tarif Idsine göre göre video yükler.
-        //public Result UploadRecipeVideo(int id, string filePath)
-        //{
-        //    var result = Result.Instance.Warning("HATA! Güncellemek istediğiniz kayıt bulunamadı.");
-
-        //    // gelen id yi sorgula db de sorgula. 
-        //    var recipe = efUnitOfWork.RecipeTemplate.GetById(id).MapTo<RecipeDto>();
-
-        //    if (recipe != null)
-        //    {
-        //        //gönderilen dosyanın yolunu gönder.
-        //        recipe.recipeVideoUrl = filePath;
-
-        //        //veritabanı nesnesi ile maple.
-        //        var mappedRecipe = recipe.MapTo<RecipeTBL>();
-
-        //        // yapılan değişikliği güncelle
-        //        efUnitOfWork.RecipeTemplate.Update(mappedRecipe);
-
-        //        // değişiklikleri kaydet ve veritabanına yansıt
-        //        efUnitOfWork.SaveChanges();
-
-        //        result = Result.Instance.Success("Video başarı ile yüklendi.");
-        //        return result;
-        //    }
-        //    return result;
-
-        //}
-
-        ////Verilen tarif Id sine göre fotoğraf ekler.
-        //public Result UploadRecipePicture(int id, string filePath)
-        //{
-        //    var result = Result.Instance.Warning("HATA! Güncellemek istediğiniz kayıt bulunamadı.");
-
-        //    // gelen id yi sorgula db de sorgula. 
-        //    var recipe = efUnitOfWork.RecipeTemplate.GetById(id).MapTo<RecipeDto>();
-
-        //    if (recipe != null)
-        //    {
-        //        //gönderilen dosyanın yolunu gönder.
-        //        recipe.recipeImageUrl = filePath;
-
-        //        //veritabanı nesnesi ile maple.
-        //        var mappedRecipe = recipe.MapTo<RecipeTBL>();
-
-        //        // yapılan değişikliği güncelle
-        //        efUnitOfWork.RecipeTemplate.Update(mappedRecipe);
-
-        //        // değişiklikleri kaydet ve veritabanına yansıt
-        //        efUnitOfWork.SaveChanges();
-
-        //        result = Result.Instance.Success("Fotoğraf başarıyla eklendi.");
-        //        return result;
-        //    }
-        //    return result;
-
-        //}
+       
 
     }
 }

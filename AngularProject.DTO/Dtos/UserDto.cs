@@ -19,7 +19,6 @@ namespace AngularProject.DTO.Dtos
         public DateTime registrationDate { get; set; }
         public bool userType { get; set; }
         public DateTime birthdate { get; set; }
-        public string identityNumber { get; set; }
         public bool isDelete { get; set; }
 
 

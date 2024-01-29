@@ -14,21 +14,18 @@ namespace AngularProject.EF.Models
     
     public partial class OrderTBL
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public OrderTBL()
-        {
-            this.OrderDetailTBL = new HashSet<OrderDetailTBL>();
-        }
-    
         public int orderID { get; set; }
         public int userID { get; set; }
-        public decimal totalAmount { get; set; }
+        public double totalAmount { get; set; }
         public System.DateTime orderDate { get; set; }
         public string orderStatus { get; set; }
         public bool isDelete { get; set; }
+        public string address { get; set; }
+        public int phoneNumber { get; set; }
+        public int productID { get; set; }
+        public Nullable<int> quantity { get; set; }
+        public Nullable<double> unitPrice { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OrderDetailTBL> OrderDetailTBL { get; set; }
         public virtual UserTBL UserTBL { get; set; }
     }
 }

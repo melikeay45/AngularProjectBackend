@@ -257,9 +257,9 @@
     <Compile Include="Controllers\LogApiController.cs" />
     <Compile Include="Controllers\LoginApiController.cs" />
     <Compile Include="Controllers\OrderApiController.cs" />
-    <Compile Include="Controllers\OrderDetailApiController.cs" />
     <Compile Include="Controllers\ProductApiController.cs" />
     <Compile Include="Controllers\ShoppingCartApiController.cs" />
+    <Compile Include="Controllers\UserApiController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -271,7 +271,6 @@
     <Compile Include="Services\LogApiService.cs" />
     <Compile Include="Services\MailApiService.cs" />
     <Compile Include="Services\OrderApiService.cs" />
-    <Compile Include="Services\OrderDetailApiService.cs" />
     <Compile Include="Services\ProductApiService.cs" />
     <Compile Include="Services\ShoppingCartApiService.cs" />
     <Compile Include="Services\TokenApiService.cs" />

@@ -17,7 +17,6 @@ namespace AngularProject.EF.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ProductTBL()
         {
-            this.OrderDetailTBL = new HashSet<OrderDetailTBL>();
             this.ShoppingCartTBL = new HashSet<ShoppingCartTBL>();
         }
     
@@ -31,8 +30,6 @@ namespace AngularProject.EF.Models
         public bool isDelete { get; set; }
     
         public virtual CategoryTBL CategoryTBL { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OrderDetailTBL> OrderDetailTBL { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ShoppingCartTBL> ShoppingCartTBL { get; set; }
     }

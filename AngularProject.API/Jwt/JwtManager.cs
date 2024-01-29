@@ -18,7 +18,7 @@ public class JwtManager
         _audience = audience;
     }
 
-    public string GenerateToken(string username, int userId, int expireMinutes = 60)
+    public string GenerateToken(int userId, bool userType, int expireMinutes = 60)
     {
         var symmetricKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));
         var credentials = new SigningCredentials(symmetricKey, SecurityAlgorithms.HmacSha256);
@@ -26,6 +26,8 @@ public class JwtManager
         var claims = new[]
         {
             new Claim(ClaimTypes.Name, userId.ToString()),
+            new Claim(ClaimTypes.Role, userType.ToString()),
+            
         };
 
         var token = new JwtSecurityToken(_issuer, _audience, claims, expires: DateTime.UtcNow.AddMinutes(expireMinutes), signingCredentials: credentials);

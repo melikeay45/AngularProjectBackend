@@ -97,6 +97,8 @@ namespace AngularProject.CORE.Repositories
                     _dbSet.Remove(entity);
                 }
             }
+            _dbContext.SaveChanges(); // Değişiklikleri kaydet
+
         }
 
         //Veritabanındaki verilen id'ye sahip veriyi siler.

@@ -10,11 +10,17 @@ namespace AngularProject.DTO.Dtos
     {
         public int orderID { get; set; }
         public int userID { get; set; }
-        public decimal totalAmount { get; set; }
+        public double totalAmount { get; set; }
         public DateTime orderDate { get; set; }
         public string orderStatus { get; set; }
+        public bool isDelete { get; set; }
+        public string address { get; set; }
+        public int phoneNumber { get; set; }
+        public int productID { get; set; }
+        public int quantity { get; set; }
+        public int unitPrice { get; set; }
 
-        public virtual List<OrderDetailDto> orderDetails { get; set; }
+
         public virtual UserDto user { get; set; }
     }
 }

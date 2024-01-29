@@ -1,13 +1,17 @@
-﻿using AngularProject.CORE.Helper;
+﻿using AngularProject.API.Models;
+using AngularProject.CORE.Helper;
 using AngularProject.CORE.Result;
 using AngularProject.CORE.UnitOfWork;
 using AngularProject.DTO.Dtos;
 using AngularProject.EF.Models;
+using AutoMapper.QueryableExtensions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Http;
+using Result = AngularProject.CORE.Result.Result;
 
 namespace AngularProject.API.Services
 {
@@ -41,23 +45,7 @@ namespace AngularProject.API.Services
 
             return result;
         }
-        ////Yeni ürün ekler
-        //public Result AddShoppingCart(ShoppingCartDto shoppingCartDto)
-        //{
-        //    var result = Result.Instance.Warning("HATA! Girdiğiniz bilgileri kontrol ediniz.");
 
-        //    if (shoppingCartDto != null) //girilen bilgilerin kontrolü yapılır.
-        //    {
-        //        var mappedShoppingCart = shoppingCartDto.MapTo<ShoppingCartTBL>();
-        //        efUnitOfWork.ShoppingCartTemplate.Add(mappedShoppingCart);
-        //        efUnitOfWork.SaveChanges();
-
-        //        result = Result.Instance.Success("Ürün sepetinize başarıyla eklendi.", mappedShoppingCart.cartID);
-
-        //        return result;
-        //    }
-        //    return result;
-        //}
 
         public Result AddOrUpdateShoppingCart(ShoppingCartDto shoppingCartDto)
         {
@@ -92,16 +80,38 @@ namespace AngularProject.API.Services
             return result;
         }
 
+        public Result DeleteAll(int userID)
+        {
+            try
+            {
+                var shoppingCarts = efUnitOfWork.ShoppingCartTemplate.GetAll()
+           .Where(r => r.userID == userID)
+           .OrderBy(r => r.cartID)
+           .ToList()
+           .Select(r => r.MapTo<ShoppingCartDto>());
+                //var _shoppingCarts=JsonConvert.SerializeObject(shoppingCarts);
+                foreach (var shoppingCart in shoppingCarts)
+                {
+                    efUnitOfWork.ShoppingCartTemplate.Delete(shoppingCart.cartID);
+                }
+
+                Result.Instance.Success("Başarılı");
+            }
+            catch (Exception ex) { }
+            return Result.Instance.Success("Başarısız");
+        }
 
 
         //Verilen userID  değerine sahip sepetteki verileri veritabanında bulur ve döndürür.
         public string GetShoppingCartByUserID(int userID)
         {
             var shoppingCart = efUnitOfWork.ShoppingCartTemplate.GetAll()
-           .Where(r => r.userID==userID)
-           .OrderBy(r=>r.cartID)
-           .ToList()
-           .Select(r => r.MapTo<ShoppingCartDto>());
+           .Where(r => r.userID == userID)
+           //.OrderBy(r=>r.cartID)
+           .ProjectTo<ShoppingCartDto>()
+           .ToList();
+
+           //.Select(r => r.MapTo<ShoppingCartDto>());
 
             return JsonConvert.SerializeObject(shoppingCart);
         }

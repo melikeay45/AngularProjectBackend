@@ -22,7 +22,6 @@ namespace AngularProject.DTO.MappingProfiles
                 .ForMember(d => d.registrationDate, o => o.MapFrom(s => s.registrationDate))
                 .ForMember(d => d.userType, o => o.MapFrom(s => s.userType))
                 .ForMember(d => d.birthdate, o => o.MapFrom(s => s.birthdate))
-                .ForMember(d => d.identityNumber, o => o.MapFrom(s => s.identityNumber))
                 .ForMember(d => d.isDelete, o => o.MapFrom(s => s.isDelete))
                 .ReverseMap()
                 .ForMember(s => s.userID, o => o.MapFrom(d => d.userID))
@@ -36,7 +35,6 @@ namespace AngularProject.DTO.MappingProfiles
                 .ForMember(s => s.registrationDate, o => o.MapFrom(d => d.registrationDate))
                 .ForMember(s => s.userType, o => o.MapFrom(d => d.userType))
                 .ForMember(s => s.birthdate, o => o.MapFrom(d => d.birthdate))
-                .ForMember(s => s.identityNumber, o => o.MapFrom(d => d.identityNumber))
                 .ForMember(s => s.isDelete, o => o.MapFrom(d => d.isDelete))
                 ;
             ;
