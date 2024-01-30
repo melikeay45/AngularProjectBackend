@@ -82,6 +82,9 @@ namespace AngularProject.API.Controllers
                     case "fileName":
                         addProductDTO.fileName = value;
                         break;
+                    case "categoryID":
+                        addProductDTO.categoryID = Convert.ToInt32(value);
+                        break;
                 }
             }
 
@@ -124,7 +127,7 @@ namespace AngularProject.API.Controllers
                 imageURL = addProductDTO.fileName,
                 stockQuantity=0,
                 isDelete = false,
-                categoryID=1
+                categoryID=addProductDTO.categoryID,
             };
             ShoppingProjectEntities shoppingProjectEntities = new ShoppingProjectEntities();
             EFUnitOfWork efUnitOfWork = new EFUnitOfWork(shoppingProjectEntities);
@@ -270,6 +273,7 @@ namespace AngularProject.API.Controllers
         
         public class AddProductDTO
         {
+            public int categoryID { get; set; }
             public string productName { get; set; }
             public string productDescription { get; set; }
             public decimal price { get; set; }
